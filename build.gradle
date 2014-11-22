@@ -1,0 +1,26 @@
+apply plugin: 'scala'
+apply from: 'integration-test.gradle'
+
+repositories{
+    mavenCentral()
+}
+
+ext {
+	scalaVersion = '2.11'
+	scalaMinorVersion = '4'
+	scalacticVersion = '2.2.1'
+}
+
+dependencies {
+	compile "org.scala-lang:scala-library:$scalaVersion.$scalaMinorVersion"
+	compile "org.scalactic:scalactic_$scalaVersion:$scalacticVersion"
+	testCompile "org.scalatest:scalatest_$scalaVersion:$scalacticVersion"
+}
+
+task run(type: JavaExec, dependsOn: classes) {
+    main = 'net.nelanka.sample.main.Main'
+    classpath sourceSets.main.runtimeClasspath
+    classpath configurations.runtime
+}
+
+//build/classes/main/net/nelanka/sample/Main/Main
