@@ -1,4 +1,1 @@
-ScalaGradleProjectTemplate
-==========================
-
-A template for Scala projects using Gradle
+## Example Scala Program built with Gradle as a starting template

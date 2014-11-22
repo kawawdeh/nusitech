@@ -1,6 +1,15 @@
 *.class
 *.log
 
+# mine
+.idea
+build
+target
+logs
+.gradle
+data
+*.iml
+
 # sbt specific
 .cache/
 .history/
