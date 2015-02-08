@@ -1,3 +1,4 @@
-[![Build Status](https://travis-ci.org/nelanka/ScalaGradleProjectTemplate.svg?branch=master)](https://travis-ci.org/nelanka/ScalaGradleProjectTemplate)
+Template for Scala Project wth Gradle Build
+===========================================
 
-Example Scala Program built with Gradle as a starting template
+[![Build Status](https://travis-ci.org/nelanka/ScalaGradleProjectTemplate.svg?branch=master)](https://travis-ci.org/nelanka/ScalaGradleProjectTemplate)
