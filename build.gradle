@@ -1,9 +1,58 @@
-apply plugin: 'scala'
-apply from: 'integration-test.gradle'
+repositories{
+  jcenter()
+}
+
+buildscript {
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath "com.github.maiflai:gradle-scalatest:0.6-5-g9065d91"
+    classpath "org.scoverage:gradle-scoverage:1.0.8"
+  }
+}
 
 // Adds task run
 apply plugin: 'application'
 mainClassName = 'net.nelanka.sample.main.Main'
+
+// Allows ScalaTest tests to be run
+apply plugin: "com.github.maiflai.scalatest"
+
+// Code coverage
+apply plugin: 'scoverage'
+//apply plugin: "org.scoverage.ScoveragePlugin"
+
+ext {
+	scalaVersion = '2.11'
+	scalaMinorVersion = '5'
+
+  junitVersion = '4.12'
+  scalacticVersion = '2+'
+  scalaCheckVersion = '1.12.1'
+  scoverageVersion = '1.0.4'
+}
+
+apply plugin: 'scala'
+compileScala {
+  scalaCompileOptions.additionalParameters = ['-feature', '-language:implicitConversions', '-Xlint']
+  dependencies {
+    compile "org.scala-lang:scala-library:$scalaVersion.$scalaMinorVersion"
+  }
+}
+
+dependencies {
+  compile "org.scalactic:scalactic_$scalaVersion:$scalacticVersion"
+
+  testCompile "junit:junit:$junitVersion"
+  testCompile "org.scalatest:scalatest_$scalaVersion:$scalacticVersion"
+  testCompile "org.scalacheck:scalacheck_$scalaVersion:$scalaCheckVersion"
+
+  testRuntime 'org.pegdown:pegdown:1.1.0'
+
+  scoverage "org.scoverage:scalac-scoverage-plugin_$scalaVersion:$scoverageVersion"
+  scoverage "org.scoverage:scalac-scoverage-runtime_$scalaVersion:$scoverageVersion"
+}
 
 // Jar without external dependencies
 jar {
@@ -20,37 +69,4 @@ task fatJar(type: Jar) {
   baseName = project.name + '-all'
   from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
   with jar
-}
-
-repositories{
-    mavenCentral()
-}
-
-ext {
-	scalaVersion = '2.11'
-	scalaMinorVersion = '5'
-
-  junitVersion = '4.12'
-  scalacticVersion = '2.2.4'
-  scalaCheckVersion = '1.12.1'
-}
-
-dependencies {
-	compile "org.scala-lang:scala-library:$scalaVersion.$scalaMinorVersion"
-	compile "org.scalactic:scalactic_$scalaVersion:$scalacticVersion"
-
-  testCompile "junit:junit:$junitVersion"
-  testCompile "org.scalatest:scalatest_$scalaVersion:$scalacticVersion"
-  testCompile "org.scalacheck:scalacheck_$scalaVersion:$scalaCheckVersion"
-}
-
-test {
-  useJUnit()
-
-  testLogging {
-    events "passed", "skipped", "failed"
-  }
-
-  // always run tests
-  outputs.upToDateWhen { false }
 }
