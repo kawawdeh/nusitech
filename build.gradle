@@ -1,17 +1,21 @@
 apply plugin: 'scala'
 apply from: 'integration-test.gradle'
 
+// Adds task run
+apply plugin: 'application'
+mainClassName = 'net.nelanka.sample.main.Main'
+
+// Jar without external dependencies
 jar {
   manifest {
-    attributes 'Main-Class': 'net.nelanka.sample.main.Main'
+    attributes 'Main-Class': "$mainClassName"
   }
 }
 
+// Runnable jar with all dependencies
 task fatJar(type: Jar) {
   manifest {
-    attributes 'Implementation-Title': 'Gradle Jar File Example',  
-    'Implementation-Version': version,
-    'Main-Class': 'net.nelanka.sample.main.Main'
+    attributes 'Main-Class': "$mainClassName"
   }
   baseName = project.name + '-all'
   from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
@@ -38,13 +42,6 @@ dependencies {
   testCompile "junit:junit:$junitVersion"
   testCompile "org.scalatest:scalatest_$scalaVersion:$scalacticVersion"
   testCompile "org.scalacheck:scalacheck_$scalaVersion:$scalaCheckVersion"
-}
-
-// Creates a gradle task called 'run' which allows us to run Main
-task run(type: JavaExec, dependsOn: classes) {
-    main = 'net.nelanka.sample.main.Main'
-    classpath sourceSets.main.runtimeClasspath
-    classpath configurations.runtime
 }
 
 test {
